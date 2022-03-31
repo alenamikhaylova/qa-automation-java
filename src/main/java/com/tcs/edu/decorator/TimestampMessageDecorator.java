@@ -17,6 +17,7 @@ public class TimestampMessageDecorator {
      * @param message сообщение с типом String
      */
     public static void decorate(String message) {
-        System.out.println(Instant.now() +" "+ message);
+        String decoratedMessage = Instant.now() +" "+ message;
+        System.out.println(decoratedMessage);
     }
 }
