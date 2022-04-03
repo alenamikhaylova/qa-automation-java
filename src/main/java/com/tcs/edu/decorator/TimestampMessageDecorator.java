@@ -10,6 +10,11 @@ import java.time.Instant;
 public class TimestampMessageDecorator {
 
     /**
+     * Счетчик
+     */
+    public static Integer messageCount = 0;
+
+    /**
      * назначение метода: вывод на экран/консоль строки сообщения, обогащенной текущим временем,
      * <br>входные параметры: данные с типом String (Строка),
      * <br>Side effect: осуществление операций вывода, изменение консоли
@@ -18,6 +23,7 @@ public class TimestampMessageDecorator {
      */
     public static String decorate(String message) {
         String decoratedMessage = Instant.now() + " " + message;
-        return decoratedMessage;
+        messageCount++;
+        return messageCount + " " + decoratedMessage;
     }
 }
