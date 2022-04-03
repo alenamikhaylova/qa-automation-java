@@ -12,12 +12,11 @@ public class TimestampMessageDecorator {
     /**
      * назначение метода: вывод на экран/консоль строки сообщения, обогащенной текущим временем,
      * <br>входные параметры: данные с типом String (Строка),
-     * <br>побочные эффекты: осуществление операций вывода, изменение консоли
+     * <br>Side effect: осуществление операций вывода, изменение консоли
      *
      * @param message сообщение с типом String
      */
-    public static void decorate(String message) {
-        String decoratedMessage = Instant.now() +" "+ message;
-        System.out.println(decoratedMessage);
+    public static String decorate(String message) {
+        return Instant.now() + " " + message;
     }
 }
