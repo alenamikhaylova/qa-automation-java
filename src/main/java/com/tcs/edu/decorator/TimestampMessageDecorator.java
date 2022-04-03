@@ -21,8 +21,8 @@ public class TimestampMessageDecorator {
      *
      * @param message сообщение с типом String
      */
-    public static String decorate(String message) {
-        var decoratedMessage = Instant.now() + " " + message;
+    public static String decorate(final String message) {
+        final var decoratedMessage = Instant.now() + " " + message;
         messageCount++;
         return messageCount + " " + decoratedMessage;
     }
