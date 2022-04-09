@@ -2,8 +2,14 @@ package com.tcs.edu;
 
 import com.tcs.edu.printer.ConsolePrinter;
 
+/**
+* Test case
+* */
 class Application {
     public static void main(String[] args) {
+        ConsolePrinter.print("Hello world!");
+        ConsolePrinter.print("Hello world!");
+        ConsolePrinter.print("Hello world!");
         ConsolePrinter.print("Hello world!");
         ConsolePrinter.print("Hello world!");
         ConsolePrinter.print("Hello world!");

@@ -10,6 +10,11 @@ import java.time.Instant;
 public class TimestampMessageDecorator {
 
     /**
+     * Размер страницы
+     */
+    public static Integer PAGE_SIZE = 2;
+
+    /**
      * Счетчик
      */
     public static Integer messageCount = 0;
@@ -24,6 +29,12 @@ public class TimestampMessageDecorator {
     public static String decorate(final String message) {
         final var decoratedMessage = Instant.now() + " " + message;
         messageCount++;
-        return messageCount + " " + decoratedMessage;
+        if (messageCount % PAGE_SIZE == 0)
+            return messageCount + " " + decoratedMessage
+                    + System.lineSeparator()
+                    + "---";
+        else
+            return messageCount + " " + decoratedMessage;
     }
 }
+
