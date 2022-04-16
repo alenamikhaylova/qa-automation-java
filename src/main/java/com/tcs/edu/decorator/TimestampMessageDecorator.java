@@ -27,14 +27,22 @@ public class TimestampMessageDecorator {
      * @param message сообщение с типом String
      */
     public static String decorate(final String message) {
-        final var decoratedMessage = Instant.now() + " " + message;
-        messageCount++;
-        if (messageCount % PAGE_SIZE == 0)
-            return messageCount + " " + decoratedMessage
-                    + System.lineSeparator()
-                    + "---";
-        else
-            return messageCount + " " + decoratedMessage;
+        final var decoratedMessage = messageCount + " " + Instant.now() + " " + message;
+
+        return messageCount % PAGE_SIZE == 0 ?
+                decoratedMessage + System.lineSeparator() + "---" :
+                decoratedMessage;
+
+
+//        /**
+//         * "if-else" usage
+//         */
+//        if (messageCount % PAGE_SIZE == 0)
+//            return messageCount + " " + decoratedMessage
+//                    + System.lineSeparator()
+//                    + "---";
+//        else
+//            return messageCount + " " + decoratedMessage;
     }
 }
 
