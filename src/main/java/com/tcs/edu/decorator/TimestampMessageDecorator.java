@@ -27,6 +27,7 @@ public class TimestampMessageDecorator {
      * @param message сообщение с типом String
      */
     public static String decorate(String message) {
+        messageCount++;
         var decoratedMessage = messageCount + " " + Instant.now() + " " + message;
 
         if (messageCount % PAGE_SIZE == 0) {
