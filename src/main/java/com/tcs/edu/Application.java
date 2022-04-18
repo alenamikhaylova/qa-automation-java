@@ -9,11 +9,11 @@ import static com.tcs.edu.decorator.Severity.*;
  */
 class Application {
     public static void main(String[] args) {
-        MessageService.process(MINOR, "Hello world!");
-        MessageService.process(REGULAR, "Hello world!");
-        MessageService.process(REGULAR, "Hello world!");
-        MessageService.process(MAJOR, "Hello world!");
-        MessageService.process(MINOR, "Hello world!");
-        MessageService.process(MAJOR, "Hello world!");
+        MessageService.print(MINOR, "Hello world!");
+        MessageService.print(REGULAR, "Hello world!");
+        MessageService.print(REGULAR, "Hello world!");
+        MessageService.print(MAJOR, "Hello world!");
+        MessageService.print(MINOR, "Hello world!");
+        MessageService.print(MAJOR, "Hello world!");
     }
 }
