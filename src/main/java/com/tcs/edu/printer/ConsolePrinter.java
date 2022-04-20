@@ -2,6 +2,7 @@ package com.tcs.edu.printer;
 
 import static com.tcs.edu.decorator.TimestampMessageDecorator.decorate;
 
+
 /**
  * назначение класса: вывод сообщения в консоль
  *
