@@ -4,6 +4,7 @@ import com.tcs.edu.decorator.MessageService;
 
 import static com.tcs.edu.decorator.Severity.*;
 
+
 /**
  * Test case:
  * <br>вывод сообщений с разным уровнем важности

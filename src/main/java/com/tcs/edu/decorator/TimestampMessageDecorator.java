@@ -31,9 +31,10 @@ public class TimestampMessageDecorator {
         var decoratedMessage = messageCount + " " + Instant.now() + " " + message;
 
         if (messageCount % PAGE_SIZE == 0) {
-            decoratedMessage = decoratedMessage + System.lineSeparator() + "---";
+           decoratedMessage = decoratedMessage + System.lineSeparator() + "---";
         }
         return decoratedMessage;
     }
 }
+
 
