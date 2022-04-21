@@ -8,14 +8,13 @@ import static com.tcs.edu.decorator.TimestampMessageDecorator.decorate;
 public class MessageService {
 
     /**
-     * API процедуры вывода
+     * API процедуры вывода сообщений с уровнем важности
      */
-    public static void print(Severity level, String... messages) {
+    public static void print(Severity level, String message, String... messages) {
+        ConsolePrinter.print(decorate(message + mapToString(level)));
+
         for (String current : messages) {
-            ConsolePrinter.print(decorate(current) + mapToString(level));
-        }
-        for (int current = 0; current < messages.length; current++) {
-            ConsolePrinter.print(decorate(messages[current]) + mapToString(level));
+            ConsolePrinter.print(decorate(current + mapToString(level)));
         }
     }
 }
