@@ -11,7 +11,9 @@ public class MessageService {
      * API процедуры вывода сообщений с уровнем важности
      */
     public static void print(Severity level, String message, String... messages) {
-        ConsolePrinter.print(decorate(message + mapToString(level)));
+        if (message != null) {
+            ConsolePrinter.print(decorate(message + mapToString(level)));
+        }
 
         for (String current : messages) {
             ConsolePrinter.print(decorate(current + mapToString(level)));
