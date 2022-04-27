@@ -11,8 +11,9 @@ import static com.tcs.edu.decorator.Severity.*;
  */
 class Application {
     public static void main(String[] args) {
-        MessageService.print(MINOR, null, "Hello world!");
-        MessageService.print(MAJOR, null, "Hello world!");
-        MessageService.print(REGULAR, "Hello world!", "Hello world!");
+        MessageService.log(MINOR, "1)Hello world!", "Hello", null, "1");
+        MessageService.log(MAJOR, "2)Hello world!", "Hi", "2", null);
+        MessageService.log(REGULAR, null, "world!", "3");
+        MessageService.log(null, "3)Hello world!", "Hi world!", "4");
     }
 }
