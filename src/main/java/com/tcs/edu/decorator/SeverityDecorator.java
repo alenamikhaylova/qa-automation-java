@@ -1,7 +1,7 @@
 package com.tcs.edu.decorator;
 
 /**
- * Строковое представление уровня важности
+ * Строковое представление уровня важности выводимых сообщений
  */
 public class SeverityDecorator {
     public static String mapToString(Severity severity) {

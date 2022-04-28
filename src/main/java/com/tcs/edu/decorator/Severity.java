@@ -1,7 +1,7 @@
 package com.tcs.edu.decorator;
 
 /**
- * Уровень значимости выводимых сообщений
+ * Уровень важности выводимых сообщений
  */
 public enum Severity {
     MINOR,

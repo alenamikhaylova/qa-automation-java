@@ -4,8 +4,6 @@ import java.time.Instant;
 
 /**
  * назначение класса: декорирование сообщений с операцией добавления к строке текущего времени
- *
- * @author Михайлова Алена Владимировна
  */
 public class TimestampMessageDecorator {
 
@@ -31,7 +29,7 @@ public class TimestampMessageDecorator {
         var decoratedMessage = messageCount + " " + Instant.now() + " " + message;
 
         if (messageCount % PAGE_SIZE == 0) {
-           decoratedMessage = decoratedMessage + System.lineSeparator() + "---";
+            decoratedMessage = decoratedMessage + System.lineSeparator() + "---";
         }
         return decoratedMessage;
     }
