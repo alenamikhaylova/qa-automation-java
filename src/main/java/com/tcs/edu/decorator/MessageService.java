@@ -1,5 +1,7 @@
 package com.tcs.edu.decorator;
 
+import com.tcs.edu.domain.Message;
+
 import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
 import static com.tcs.edu.decorator.TimestampMessageDecorator.decorate;
 import static com.tcs.edu.printer.ConsolePrinter.print;
@@ -12,36 +14,35 @@ public class MessageService {
     /**
      * назначение метода: присвоение выводимому сообщению уровня важности и порядка вывода
      *
-     * @param level    уровень важности
      * @param order    порядок вывода сообщений
      * @param doubling признак дублирования сообщений
      * @param messages массив сообщений с типом String
      */
-    public static void log(Severity level, MessageOrder order, Doubling doubling, String... messages) {
-        if (doubling != null) {
+    public static void log(MessageOrder order, Doubling doubling, Message message, Message... messages) {
+        if (messages != null && doubling != null) {
             if (doubling.equals(Doubling.DOUBLES)) {
-                log(level, order, messages);
+                log(order, message, messages);
             } else if (doubling.equals(Doubling.DISTINCT)) {
-                log(level, order, checkDifferent(messages));
+                log(order, message, checkDifferent(messages));
             }
         }
     }
 
-    public static void log(Severity level, MessageOrder messageOrder, String... messages) {
-        if (messageOrder != null) {
+    public static void log(MessageOrder messageOrder, Message message, Message... messages) {
+        if (messages != null && messageOrder != null) {
             if (messageOrder.equals(MessageOrder.ASC)) {
-                log(level, messages);
+                log(message, messages);
             } else if (messageOrder.equals(MessageOrder.DESC)) {
-                log(level, checkDescend(messages));
+                log(message, checkDescend(messages));
             }
         }
     }
 
-    public static void log(Severity level, String... messages) {
-        if (level != null && messages != null && messages.length != 0) {
-            for (String currentMessage : messages) {
+    public static void log(Message message, Message... messages) {
+        if (messages != null && messages.length != 0) {
+            for (Message currentMessage : messages) {
                 if (currentMessage != null) {
-                    print(decorate(String.format("%s %s", currentMessage, mapToString(level))));
+                    print(decorate(String.format("%s %s", currentMessage.getBody(), mapToString(currentMessage.getLevel()))));
                 }
             }
         }
@@ -53,8 +54,8 @@ public class MessageService {
      * @param messages массив сообщений
      * @return возвращает массив неповторящющихся сообщений
      */
-    public static String[] checkDifferent(String... messages) {
-        String[] messagesDifferent = new String[messages.length];
+    public static Message[] checkDifferent(Message... messages) {
+        Message[] messagesDifferent = new Message[messages.length];
         if (messages.length != 0) {
             messagesDifferent[0] = messages[0];
             int k = 1;
@@ -74,9 +75,9 @@ public class MessageService {
      * @param messages массив сообщений
      * @return возвращает массив сообщений в убывающем порядке
      */
-    private static String[] checkDescend(String... messages) {
+    private static Message[] checkDescend(Message... messages) {
         int k = messages.length;
-        String[] messagesDescend = new String[k];
+        Message[] messagesDescend = new Message[k];
         for (int i = 0; i < k; i++) {
             messagesDescend[i] = messages[k - i - 1];
         }
@@ -90,12 +91,13 @@ public class MessageService {
      * @param messages массив сообщений
      * @return возвращает булево значение: message в массиве messages -> true, иначе -> false
      */
-    public static boolean checkInsideArray(String message, String[] messages) {
-        for (String s : messages) {
-            if (s != null && s.equals(message)) {
-                return true;
+    public static boolean checkInsideArray(Message message, Message[] messages) {
+        if (message != null)
+            for (Message m : messages) {
+                if ((m != null) && m.getBody().equals(message.getBody())) {
+                    return true;
+                }
             }
-        }
         return false;
     }
 }
