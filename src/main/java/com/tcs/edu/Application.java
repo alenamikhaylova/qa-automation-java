@@ -15,13 +15,21 @@ import static com.tcs.edu.decorator.Doubling.*;
  */
 class Application {
     public static void main(String[] args) {
-        Message message1 = new Message(MAJOR, "H1");
-        Message message2 = new Message(REGULAR, "H2");
-        log(DESC, DOUBLES, message2, message2);
-        log(null, DOUBLES, message2, message2);
-        log(DESC, DISTINCT, message1, message2);
-        log(ASC, DISTINCT, message1, message2);
-        log(message1, message2);
+        Message messageMain = new Message(REGULAR, "H1");
+        Message[] messages = new Message[]{
+                new Message(MAJOR, "H2"),
+                new Message(MAJOR, "H2"),
+                new Message(REGULAR, "H3"),
+                new Message(REGULAR, "H3"),
+                new Message("H4"),
+                new Message("H4")
+        };
+
+        log(ASC, DISTINCT, messageMain, messages);
+        log(DESC, DISTINCT, messageMain, messages);
+        log(ASC, DOUBLES, messageMain, messages);
+        log(DESC, DOUBLES, messageMain, messages);
+        log(messageMain, messages);
 
 //        MessageService.log(MINOR, DESC, DOUBLES, "1)H", "1)H", "2)H", "2)H", null, "3)H", "3)H");
 //        MessageService.log(MAJOR, DESC, DISTINCT, "4)H", "4)H", "5)He", "5)He", "6)He", "6)He", null);

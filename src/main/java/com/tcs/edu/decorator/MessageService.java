@@ -42,7 +42,7 @@ public class MessageService {
         if (messages != null && messages.length != 0) {
             for (Message currentMessage : messages) {
                 if (currentMessage != null) {
-                    print(decorate(String.format("%s %s", currentMessage.getBody(), mapToString(currentMessage.getLevel()))));
+                    print(decorate(String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()))));
                 }
             }
         }

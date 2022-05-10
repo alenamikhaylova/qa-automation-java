@@ -26,10 +26,10 @@ public class TimestampMessageDecorator {
      */
     public static String decorate(String message) {
         messageCount++;
-        var decoratedMessage = messageCount + " " + Instant.now() + " " + message;
+        var decoratedMessage = String.format("%d %s %s", messageCount, Instant.now(), message);
 
         if (messageCount % PAGE_SIZE == 0) {
-            decoratedMessage = decoratedMessage + System.lineSeparator() + "---";
+            decoratedMessage = String.format("%s %s %s", decoratedMessage, System.lineSeparator(), "---");
         }
         return decoratedMessage;
     }
