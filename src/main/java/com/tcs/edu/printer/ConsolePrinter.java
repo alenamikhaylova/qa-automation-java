@@ -1,8 +1,5 @@
 package com.tcs.edu.printer;
 
-import static com.tcs.edu.decorator.TimestampMessageDecorator.decorate;
-
-
 /**
  * назначение класса: вывод сообщения в консоль
  *
@@ -10,16 +7,12 @@ import static com.tcs.edu.decorator.TimestampMessageDecorator.decorate;
  */
 public class ConsolePrinter {
 
-
     /**
      * назначение метода: вывод сообщения на экран/консоль,
      * <br>входные параметры: данные с типом String (Строка),
      * <br>Side effect: осуществление операций вывода, изменение консоли
-     *
-     * @param message сообщение с типом String
      */
-    public static void print(String message) {
-        System.out.println(decorate(message));
+    public static void print(String decoratedMessage) {
+        System.out.println(decoratedMessage);
     }
 }
-
