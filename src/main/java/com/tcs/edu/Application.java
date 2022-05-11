@@ -1,9 +1,11 @@
 package com.tcs.edu;
 
+import com.tcs.edu.decorator.OrderedDistinctedMessageService;
+import com.tcs.edu.decorator.TimestampMessageDecorator;
 import com.tcs.edu.domain.Message;
+import com.tcs.edu.printer.ConsolePrinter;
 
 import static com.tcs.edu.decorator.MessageOrder.*;
-import static com.tcs.edu.decorator.MessageService.*;
 import static com.tcs.edu.decorator.Severity.*;
 import static com.tcs.edu.decorator.Doubling.*;
 
@@ -25,11 +27,15 @@ class Application {
                 new Message("H4")
         };
 
-        log(ASC, DISTINCT, messageMain, messages);
-        log(DESC, DISTINCT, messageMain, messages);
-        log(ASC, DOUBLES, messageMain, messages);
-        log(DESC, DOUBLES, messageMain, messages);
-        log(messageMain, messages);
+        MessageService service = new OrderedDistinctedMessageService(
+                new TimestampMessageDecorator(),
+                new ConsolePrinter()
+        );
+        service.log(ASC, DISTINCT, messageMain, messages);
+        service.log(DESC, DISTINCT, messageMain, messages);
+        service.log(ASC, DOUBLES, messageMain, messages);
+        service.log(DESC, DOUBLES, messageMain, messages);
+        service.log(messageMain, messages);
 
 //        MessageService.log(MINOR, DESC, DOUBLES, "1)H", "1)H", "2)H", "2)H", null, "3)H", "3)H");
 //        MessageService.log(MAJOR, DESC, DISTINCT, "4)H", "4)H", "5)He", "5)He", "6)He", "6)He", null);

@@ -3,11 +3,15 @@ package com.tcs.edu.domain;
 import com.tcs.edu.decorator.Severity;
 
 /**
+ * Назначение класса: шаблон выводимого сообщения
  * immutable
  * Design Pattern: Data Transfer Object / Value Object
+ * Назначение класса: шаблон выводимого сообщения
  */
 public class Message {
     /**
+     * level уровень важности
+     * body сообшение
      * Instance var = field = instance state
      */
 

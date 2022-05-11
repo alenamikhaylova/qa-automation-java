@@ -1,15 +1,27 @@
 package com.tcs.edu.decorator;
 
+import com.tcs.edu.MessageDecorator;
+import com.tcs.edu.MessageService;
+import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
+import com.tcs.edu.printer.ConsolePrinter;
 
 import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
-import static com.tcs.edu.decorator.TimestampMessageDecorator.decorate;
-import static com.tcs.edu.printer.ConsolePrinter.print;
+
 
 /**
  * API процедуры вывода сообщений с уровнем важности
  */
-public class MessageService {
+public class OrderedDistinctedMessageService implements MessageService {
+
+    private Printer printer;
+    private MessageDecorator decorator;
+
+    public OrderedDistinctedMessageService(MessageDecorator decorator, ConsolePrinter printer) {
+        this.decorator = decorator;
+        this.printer = printer;
+    }
+
 
     /**
      * назначение метода: присвоение выводимому сообщению уровня важности и порядка вывода
@@ -18,7 +30,7 @@ public class MessageService {
      * @param doubling признак дублирования сообщений
      * @param messages массив сообщений с типом String
      */
-    public static void log(MessageOrder order, Doubling doubling, Message message, Message... messages) {
+    public void log(MessageOrder order, Doubling doubling, Message message, Message... messages) {
         if (messages != null && doubling != null) {
             if (doubling.equals(Doubling.DOUBLES)) {
                 log(order, message, messages);
@@ -28,7 +40,7 @@ public class MessageService {
         }
     }
 
-    public static void log(MessageOrder messageOrder, Message message, Message... messages) {
+    public void log(MessageOrder messageOrder, Message message, Message... messages) {
         if (messages != null && messageOrder != null) {
             if (messageOrder.equals(MessageOrder.ASC)) {
                 log(message, messages);
@@ -38,11 +50,12 @@ public class MessageService {
         }
     }
 
-    public static void log(Message message, Message... messages) {
+    public void log(Message message, Message... messages) {
         if (messages != null && messages.length != 0) {
             for (Message currentMessage : messages) {
                 if (currentMessage != null) {
-                    print(decorate(String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()))));
+                    String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
+                    printer.print(decorator.decorate(resultMessage));
                 }
             }
         }
