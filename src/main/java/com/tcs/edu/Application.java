@@ -41,5 +41,6 @@ class Application {
 //        MessageService.log(MAJOR, DESC, DISTINCT, "4)H", "4)H", "5)He", "5)He", "6)He", "6)He", null);
 //        MessageService.log(REGULAR, ASC, DOUBLES, "9)H", "9)H", "10)H", "10)H", null, "11)H", "11)H");
 //        MessageService.log(MINOR, ASC, DISTINCT, "12)H", null, "12)H", "13)H", "13)H");
+
     }
 }
