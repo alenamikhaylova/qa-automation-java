@@ -5,14 +5,13 @@ import com.tcs.edu.MessageService;
 import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
-
 import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
 
 
 /**
  * API процедуры вывода сообщений с уровнем важности
  */
-public class OrderedDistinctedMessageService implements MessageService {
+public class OrderedDistinctedMessageService extends ValidatedService implements MessageService {
 
     private Printer printer;
     private MessageDecorator decorator;
@@ -30,28 +29,34 @@ public class OrderedDistinctedMessageService implements MessageService {
      * @param doubling признак дублирования сообщений
      * @param messages массив сообщений с типом String
      */
+    @Override
     public void log(MessageOrder order, Doubling doubling, Message message, Message... messages) {
-        if (messages != null && doubling != null) {
-            if (doubling.equals(Doubling.DOUBLES)) {
-                log(order, message, messages);
-            } else if (doubling.equals(Doubling.DISTINCT)) {
-                log(order, message, checkDifferent(messages));
-            }
+        //if (messages != null && doubling != null) {
+        if (!super.isArgsValid(messages) && !super.isArgsValid(doubling)) {
+            return;
+        }
+        if (doubling.equals(Doubling.DOUBLES)) {
+            log(order, message, messages);
+        } else if (doubling.equals(Doubling.DISTINCT)) {
+            log(order, message, checkDifferent(messages));
         }
     }
 
     public void log(MessageOrder messageOrder, Message message, Message... messages) {
-        if (messages != null && messageOrder != null) {
-            if (messageOrder.equals(MessageOrder.ASC)) {
-                log(message, messages);
-            } else if (messageOrder.equals(MessageOrder.DESC)) {
-                log(message, checkDescend(messages));
-            }
+        //if (messages != null && messageOrder != null)
+        if (!super.isArgsValid(messages) && !super.isArgsValid(messageOrder)) {
+            return;
+        }
+        if (messageOrder.equals(MessageOrder.ASC)) {
+            log(message, messages);
+        } else if (messageOrder.equals(MessageOrder.DESC)) {
+            log(message, checkDescend(messages));
         }
     }
 
     public void log(Message message, Message... messages) {
-        if (messages != null && messages.length != 0) {
+        //if (messages != null && messages.length != 0)
+        if (super.isArgsValid(messages) && super.isArgsValid(messages.length)) {
             for (Message currentMessage : messages) {
                 if (currentMessage != null) {
                     String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
