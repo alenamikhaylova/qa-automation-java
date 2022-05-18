@@ -1,11 +1,12 @@
 package com.tcs.edu.decorator;
 
+import com.tcs.edu.MessageDecorator;
 import java.time.Instant;
 
 /**
  * назначение класса: декорирование сообщений с операцией добавления к строке текущего времени
  */
-public class TimestampMessageDecorator {
+public class TimestampMessageDecorator implements MessageDecorator {
 
     /**
      * Размер страницы
@@ -24,12 +25,12 @@ public class TimestampMessageDecorator {
      *
      * @param message сообщение с типом String
      */
-    public static String decorate(String message) {
+    public String decorate(String message) {
         messageCount++;
-        var decoratedMessage = messageCount + " " + Instant.now() + " " + message;
+        var decoratedMessage = String.format("%d %s %s", messageCount, Instant.now(), message);
 
         if (messageCount % PAGE_SIZE == 0) {
-            decoratedMessage = decoratedMessage + System.lineSeparator() + "---";
+            decoratedMessage = String.format("%s %s %s", decoratedMessage, System.lineSeparator(), "---");
         }
         return decoratedMessage;
     }
