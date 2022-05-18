@@ -46,6 +46,7 @@ class Application {
         System.out.println(messageMain.equals(messageMain2));
         System.out.println(messageMain.equals(messageMain3));
         System.out.println(messageMain.hashCode());
+
 //        MessageService.log(MINOR, DESC, DOUBLES, "1)H", "1)H", "2)H", "2)H", null, "3)H", "3)H");
 //        MessageService.log(MAJOR, DESC, DISTINCT, "4)H", "4)H", "5)He", "5)He", "6)He", "6)He", null);
 //        MessageService.log(REGULAR, ASC, DOUBLES, "9)H", "9)H", "10)H", "10)H", null, "11)H", "11)H");
