@@ -1,5 +1,6 @@
 package com.tcs.edu.printer;
 
+import com.tcs.edu.LogException;
 import com.tcs.edu.Printer;
 import com.tcs.edu.decorator.ValidatedService;
 
@@ -16,8 +17,12 @@ public class ConsolePrinter extends ValidatedService implements Printer {
      * <br>Side effect: осуществление операций вывода, изменение консоли
      */
     @Override
-    public void print(String decoratedMessage) {
-        if (super.isArgsValid(decoratedMessage))
+    public void print(String decoratedMessage) throws LogException {
+        try {
+            ConsolePrinter.super.isArgsValid(decoratedMessage);
             System.out.println(decoratedMessage);
+        } catch (IllegalArgumentException e) {
+            throw new LogException("Wrong parameter description", e);
+        }
     }
 }

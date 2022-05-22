@@ -5,8 +5,6 @@ import com.tcs.edu.decorator.TimestampMessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
 
-import java.sql.SQLOutput;
-
 import static com.tcs.edu.decorator.MessageOrder.*;
 import static com.tcs.edu.decorator.Severity.*;
 import static com.tcs.edu.decorator.Doubling.*;
@@ -22,6 +20,9 @@ class Application {
         Message messageMain = new Message(REGULAR, "H1");
         Message messageMain2 = new Message(REGULAR, "H1");
         Message messageMain3 = new Message(MAJOR, "H1");
+        Message messageMain4 = new Message(REGULAR, null);
+        Message messageNull = null;
+        Message messageEmpty = new Message("");
 
         Message[] messages = new Message[]{
                 new Message(MAJOR, "H2"),
@@ -36,19 +37,35 @@ class Application {
                 new TimestampMessageDecorator(),
                 new ConsolePrinter()
         );
-        service.log(ASC, DISTINCT, messageMain, messages);
-        service.log(DESC, DISTINCT, messageMain, messages);
-        service.log(ASC, DOUBLES, messageMain, messages);
-        service.log(DESC, DOUBLES, messageMain, messages);
-        service.log(messageMain, messages);
+//        service.log(ASC, DISTINCT, messageMain, messages);
+//        service.log(DESC, DISTINCT, messageMain, messages);
+//        service.log(ASC, DOUBLES, messageMain, messages);
+//        service.log(DESC, DOUBLES, messageMain, messages);
+//        service.log(messageMain, messages);
+//
+//        System.out.println(messageMain);
+//        System.out.println(messageMain.equals(messageMain2));
+//        System.out.println(messageMain.equals(messageMain3));
+//        System.out.println(messageMain.hashCode());
+//
+//        System.out.println(messageMain5);
 
-        System.out.println(messageMain);
-        System.out.println(messageMain.equals(messageMain2));
-        System.out.println(messageMain.equals(messageMain3));
-        System.out.println(messageMain.hashCode());
-//        MessageService.log(MINOR, DESC, DOUBLES, "1)H", "1)H", "2)H", "2)H", null, "3)H", "3)H");
-//        MessageService.log(MAJOR, DESC, DISTINCT, "4)H", "4)H", "5)He", "5)He", "6)He", "6)He", null);
-//        MessageService.log(REGULAR, ASC, DOUBLES, "9)H", "9)H", "10)H", "10)H", null, "11)H", "11)H");
-//        MessageService.log(MINOR, ASC, DISTINCT, "12)H", null, "12)H", "13)H", "13)H");
+        try {
+            service.log(ASC, DISTINCT, messageMain, null);
+        } catch (LogException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            service.log(null, messages);
+        } catch (LogException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            service.log(messageEmpty);
+        } catch (LogException e) {
+            e.printStackTrace();
+        }
     }
 }
