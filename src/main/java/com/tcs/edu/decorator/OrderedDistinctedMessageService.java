@@ -6,7 +6,8 @@ import com.tcs.edu.MessageService;
 import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
-
+import com.tcs.edu.repository.HashMapMessageRepository;
+import com.tcs.edu.repository.MessageRepository;
 import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
 
 
@@ -17,6 +18,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
 
     private final Printer printer;
     private final MessageDecorator decorator;
+    private MessageRepository messageRepository = new HashMapMessageRepository();
 
     public OrderedDistinctedMessageService(MessageDecorator decorator, ConsolePrinter printer) {
         this.decorator = decorator;
@@ -61,27 +63,23 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         }
     }
 
-    public void log(Message message, Message... messages) throws LogException {
-        try {
-            super.isArgsValid(messages);
-        } catch (IllegalArgumentException e) {
-            throw new LogException("notValidArgMessage", e);
-        }
-        for (Message currentMessage : messages) {
-            String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
-            printer.print(decorator.decorate(resultMessage));
-        }
-//        if (super.isArgsValid(messages) && super.isArgsValid(messages.length)) {
-//            for (Message currentMessage : messages) {
-//                if (currentMessage != null) {
-//                    String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
-//                    try {
-//                        printer.print(decorator.decorate(resultMessage));
-//                    } catch (IllegalArgumentException e) {
-//                        throw new LogException("notValidArgMessage", e);
-//                    }
-//                }
-//            }
+    @Override
+    public Message findByPrimaryKey(String key) {
+        return messageRepository.findByPRimaryKey(key);
+    }
+
+    public String log(Message message, Message... messages) throws LogException {
+        // CRUD
+        return messageRepository.create(message);
+
+//        try {
+//            super.isArgsValid(messages);
+//        } catch (IllegalArgumentException e) {
+//            throw new LogException("notValidArgMessage", e);
+//        }
+//        for (Message currentMessage : messages) {
+//            String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
+//            //   printer.print(decorator.decorate(resultMessage));
 //        }
     }
 

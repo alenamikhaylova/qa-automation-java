@@ -8,7 +8,8 @@ import com.tcs.edu.domain.Message;
  * Интерфейс обработки выводимых сообщений
  */
 public interface MessageService {
-    void log(Message message, Message... messages) throws LogException;
+    String log(Message message, Message... messages) throws LogException;
+    Message findByPrimaryKey(String key);
 
     void log(MessageOrder messageOrder, Message message, Message... messages) throws LogException;
 

@@ -4,7 +4,6 @@ import com.tcs.edu.decorator.OrderedDistinctedMessageService;
 import com.tcs.edu.decorator.TimestampMessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
-
 import static com.tcs.edu.decorator.MessageOrder.*;
 import static com.tcs.edu.decorator.Severity.*;
 import static com.tcs.edu.decorator.Doubling.*;
@@ -37,35 +36,26 @@ class Application {
                 new TimestampMessageDecorator(),
                 new ConsolePrinter()
         );
-//        service.log(ASC, DISTINCT, messageMain, messages);
-//        service.log(DESC, DISTINCT, messageMain, messages);
-//        service.log(ASC, DOUBLES, messageMain, messages);
-//        service.log(DESC, DOUBLES, messageMain, messages);
-//        service.log(messageMain, messages);
+
+        final String generatedKey = service.log(messageMain);
+        System.out.println(service.findByPrimaryKey(generatedKey));
+
+//        try {
+//            service.log(ASC, DISTINCT, messageMain, null);
+//        } catch (LogException e) {
+//            e.printStackTrace();
+//        }
 //
-//        System.out.println(messageMain);
-//        System.out.println(messageMain.equals(messageMain2));
-//        System.out.println(messageMain.equals(messageMain3));
-//        System.out.println(messageMain.hashCode());
+//        try {
+//            service.log(null, messages);
+//        } catch (LogException e) {
+//            e.printStackTrace();
+//        }
 //
-//        System.out.println(messageMain5);
-
-        try {
-            service.log(ASC, DISTINCT, messageMain, null);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            service.log(null, messages);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            service.log(messageEmpty);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            service.log(messageEmpty);
+//        } catch (LogException e) {
+//            e.printStackTrace();
+//        }
     }
 }
