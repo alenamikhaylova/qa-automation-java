@@ -3,13 +3,12 @@ package com.tcs.edu.decorator;
 import com.tcs.edu.LogException;
 import com.tcs.edu.MessageDecorator;
 import com.tcs.edu.MessageService;
-import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
-import com.tcs.edu.printer.ConsolePrinter;
 import com.tcs.edu.repository.HashMapMessageRepository;
 import com.tcs.edu.repository.MessageRepository;
 
 import java.util.Collection;
+import java.util.UUID;
 
 
 /**
@@ -17,13 +16,12 @@ import java.util.Collection;
  */
 public class OrderedDistinctedMessageService extends ValidatedService implements MessageService {
 
-    private final Printer printer;
     private final MessageDecorator decorator;
-    private final MessageRepository messageRepository = new HashMapMessageRepository();
+    private MessageRepository messageRepository = new HashMapMessageRepository();
 
-    public OrderedDistinctedMessageService(MessageDecorator decorator, ConsolePrinter printer) {
+    public OrderedDistinctedMessageService(MessageDecorator decorator, MessageRepository messageRepository) {
         this.decorator = decorator;
-        this.printer = printer;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -60,10 +58,13 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         }
     }
 
-    public String log(Message message, Message... messages) throws LogException {
-        // CRUD
+    @Override
+    public UUID log(Message message) {
         return messageRepository.create(message);
+    }
 
+    public UUID log(Message message, Message... messages) throws LogException {
+        return messageRepository.create(message);
 //        try {
 //            super.isArgsValid(messages);
 //        } catch (IllegalArgumentException e) {
@@ -76,7 +77,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
     }
 
     @Override
-    public Message findByPrimaryKey(String key) {
+    public Message findByPrimaryKey(UUID key) {
         return messageRepository.findByPrimaryKey(key);
     }
 

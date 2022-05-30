@@ -5,18 +5,29 @@ import com.tcs.edu.domain.Message;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.*;
+
+/**
+ * Назначение класса: хранение сообщений в репозитории с уникальным номером
+ */
 public class HashMapMessageRepository implements MessageRepository {
-    private Map<String, Message> messages = new HashMap<>();
+    private final Map<UUID, Message> messages = new HashMap<>();
 
     @Override
-    public String create(Message message) {
-        final String keyString = String.valueOf(new Random().nextInt());
-        messages.put(keyString, message);
-        return keyString;
+    public UUID create(Message message) {
+        final UUID key = UUID.randomUUID();
+        message.setId(key);
+        messages.put(key, message);
+        return key;
     }
 
     @Override
     public Message findByPrimaryKey(String key) {
+        return messages.get(key);
+    }
+
+    @Override
+    public Message findByPrimaryKey(UUID key) {
         return messages.get(key);
     }
 
@@ -27,10 +38,8 @@ public class HashMapMessageRepository implements MessageRepository {
 
     @Override
     public Collection<Message> findAllBySeverity(Severity by) {
-        Collection<Message> filteredMessages = new ArrayList<>();
-        for (Message current : messages.values()) {
-            if (current.getLevel() == by) filteredMessages.add(current);
-        }
-        return filteredMessages;
+        return messages.values().stream()
+                .filter(message -> message.getLevel() == by)
+                .collect(toList());
     }
 }
