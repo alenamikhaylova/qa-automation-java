@@ -1,9 +1,13 @@
 package com.tcs.edu;
 
 import com.tcs.edu.decorator.OrderedDistinctedMessageService;
+import com.tcs.edu.decorator.Severity;
 import com.tcs.edu.decorator.TimestampMessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
+
+import java.util.Collection;
+
 import static com.tcs.edu.decorator.MessageOrder.*;
 import static com.tcs.edu.decorator.Severity.*;
 import static com.tcs.edu.decorator.Doubling.*;
@@ -40,6 +44,19 @@ class Application {
         final String generatedKey = service.log(messageMain);
         System.out.println(service.findByPrimaryKey(generatedKey));
 
+        service.log(messageMain3);
+        final Collection<Message> allMessages = service.findAll();
+
+        System.out.println("======");
+        for (Message current : allMessages) {
+            System.out.println(current);
+        }
+
+
+        System.out.println("======");
+        for (Message current : service.findAllBySeverity(MAJOR)) {
+            System.out.println(current);
+        }
 //        try {
 //            service.log(ASC, DISTINCT, messageMain, null);
 //        } catch (LogException e) {

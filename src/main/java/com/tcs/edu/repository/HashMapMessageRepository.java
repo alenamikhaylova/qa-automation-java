@@ -1,11 +1,9 @@
 package com.tcs.edu.repository;
 
+import com.tcs.edu.decorator.Severity;
 import com.tcs.edu.domain.Message;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class HashMapMessageRepository implements MessageRepository {
     private Map<String, Message> messages = new HashMap<>();
@@ -18,7 +16,21 @@ public class HashMapMessageRepository implements MessageRepository {
     }
 
     @Override
-    public Message findByPRimaryKey(String key) {
+    public Message findByPrimaryKey(String key) {
         return messages.get(key);
+    }
+
+    @Override
+    public Collection<Message> findAll() {
+        return messages.values();
+    }
+
+    @Override
+    public Collection<Message> findAllBySeverity(Severity by) {
+        Collection<Message> filteredMessages = new ArrayList<>();
+        for (Message current : messages.values()) {
+            if (current.getLevel() == by) filteredMessages.add(current);
+        }
+        return filteredMessages;
     }
 }

@@ -8,7 +8,8 @@ import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
 import com.tcs.edu.repository.HashMapMessageRepository;
 import com.tcs.edu.repository.MessageRepository;
-import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
+
+import java.util.Collection;
 
 
 /**
@@ -18,7 +19,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
 
     private final Printer printer;
     private final MessageDecorator decorator;
-    private MessageRepository messageRepository = new HashMapMessageRepository();
+    private final MessageRepository messageRepository = new HashMapMessageRepository();
 
     public OrderedDistinctedMessageService(MessageDecorator decorator, ConsolePrinter printer) {
         this.decorator = decorator;
@@ -34,8 +35,6 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      */
     @Override
     public void log(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException {
-//        if (!super.isArgsValid(messages) && !super.isArgsValid(doubling)) {
-//            return;
         try {
             super.isArgsValid(doubling);
         } catch (IllegalArgumentException e) {
@@ -49,8 +48,6 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
     }
 
     public void log(MessageOrder messageOrder, Message message, Message... messages) throws LogException {
-//        if (!super.isArgsValid(messages) && !super.isArgsValid(messageOrder)) {
-//            return;
         try {
             super.isArgsValid((messageOrder));
         } catch (IllegalArgumentException e) {
@@ -61,11 +58,6 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         } else if (messageOrder.equals(MessageOrder.DESC)) {
             log(message, checkDescend(messages));
         }
-    }
-
-    @Override
-    public Message findByPrimaryKey(String key) {
-        return messageRepository.findByPRimaryKey(key);
     }
 
     public String log(Message message, Message... messages) throws LogException {
@@ -81,6 +73,21 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
 //            String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
 //            //   printer.print(decorator.decorate(resultMessage));
 //        }
+    }
+
+    @Override
+    public Message findByPrimaryKey(String key) {
+        return messageRepository.findByPrimaryKey(key);
+    }
+
+    @Override
+    public Collection<Message> findAll() {
+        return messageRepository.findAll();
+    }
+
+    @Override
+    public Collection<Message> findAllBySeverity(Severity by) {
+        return messageRepository.findAllBySeverity(by);
     }
 
     /**
