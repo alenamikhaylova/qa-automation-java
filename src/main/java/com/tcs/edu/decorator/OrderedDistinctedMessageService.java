@@ -1,10 +1,12 @@
 package com.tcs.edu.decorator;
 
+import com.tcs.edu.LogException;
 import com.tcs.edu.MessageDecorator;
 import com.tcs.edu.MessageService;
 import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
+
 import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
 
 
@@ -13,14 +15,13 @@ import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
  */
 public class OrderedDistinctedMessageService extends ValidatedService implements MessageService {
 
-    private Printer printer;
-    private MessageDecorator decorator;
+    private final Printer printer;
+    private final MessageDecorator decorator;
 
     public OrderedDistinctedMessageService(MessageDecorator decorator, ConsolePrinter printer) {
         this.decorator = decorator;
         this.printer = printer;
     }
-
 
     /**
      * назначение метода: присвоение выводимому сообщению уровня важности и порядка вывода
@@ -30,10 +31,13 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      * @param messages массив сообщений с типом String
      */
     @Override
-    public void log(MessageOrder order, Doubling doubling, Message message, Message... messages) {
-        //if (messages != null && doubling != null) {
-        if (!super.isArgsValid(messages) && !super.isArgsValid(doubling)) {
-            return;
+    public void log(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException {
+//        if (!super.isArgsValid(messages) && !super.isArgsValid(doubling)) {
+//            return;
+        try {
+            super.isArgsValid(doubling);
+        } catch (IllegalArgumentException e) {
+            throw new LogException("notValidArgMessage", e);
         }
         if (doubling.equals(Doubling.DOUBLES)) {
             log(order, message, messages);
@@ -42,10 +46,13 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         }
     }
 
-    public void log(MessageOrder messageOrder, Message message, Message... messages) {
-        //if (messages != null && messageOrder != null)
-        if (!super.isArgsValid(messages) && !super.isArgsValid(messageOrder)) {
-            return;
+    public void log(MessageOrder messageOrder, Message message, Message... messages) throws LogException {
+//        if (!super.isArgsValid(messages) && !super.isArgsValid(messageOrder)) {
+//            return;
+        try {
+            super.isArgsValid((messageOrder));
+        } catch (IllegalArgumentException e) {
+            throw new LogException("notValidArgMessage", e);
         }
         if (messageOrder.equals(MessageOrder.ASC)) {
             log(message, messages);
@@ -54,16 +61,28 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         }
     }
 
-    public void log(Message message, Message... messages) {
-        //if (messages != null && messages.length != 0)
-        if (super.isArgsValid(messages) && super.isArgsValid(messages.length)) {
-            for (Message currentMessage : messages) {
-                if (currentMessage != null) {
-                    String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
-                    printer.print(decorator.decorate(resultMessage));
-                }
-            }
+    public void log(Message message, Message... messages) throws LogException {
+        try {
+            super.isArgsValid(messages);
+        } catch (IllegalArgumentException e) {
+            throw new LogException("notValidArgMessage", e);
         }
+        for (Message currentMessage : messages) {
+            String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
+            printer.print(decorator.decorate(resultMessage));
+        }
+//        if (super.isArgsValid(messages) && super.isArgsValid(messages.length)) {
+//            for (Message currentMessage : messages) {
+//                if (currentMessage != null) {
+//                    String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
+//                    try {
+//                        printer.print(decorator.decorate(resultMessage));
+//                    } catch (IllegalArgumentException e) {
+//                        throw new LogException("notValidArgMessage", e);
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
