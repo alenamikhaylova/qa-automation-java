@@ -3,25 +3,22 @@ package com.tcs.edu.domain;
 import com.tcs.edu.decorator.Severity;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Назначение класса: шаблон выводимого сообщения
- *
  * immutable
  * Design Pattern: Data Transfer Object / Value Object
+ * Назначение класса: шаблон выводимого сообщения
  */
 public class Message {
-
     /**
      * level уровень важности
-     * <br>body сообшение
-     * <br>id уникальный идентификатор
+     * body сообшение
      * Instance var = field = instance state
      */
-    private final Severity level;
-    private final String body;
-    private UUID id;
+
+    private Severity level;
+    private String body;
 
     public Message(Severity level, String body) {
         this.level = level;
@@ -40,20 +37,11 @@ public class Message {
         return body;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Message{" +
                 "level=" + level +
                 ", body='" + body + '\'' +
-                ", id=" + id +
                 '}';
     }
 
