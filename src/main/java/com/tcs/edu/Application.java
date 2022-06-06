@@ -1,9 +1,14 @@
 package com.tcs.edu;
 
 import com.tcs.edu.decorator.OrderedDistinctedMessageService;
+import com.tcs.edu.decorator.Severity;
 import com.tcs.edu.decorator.TimestampMessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
+import com.tcs.edu.repository.HashMapMessageRepository;
+
+import java.util.Collection;
+import java.util.UUID;
 
 import static com.tcs.edu.decorator.MessageOrder.*;
 import static com.tcs.edu.decorator.Severity.*;
@@ -32,40 +37,43 @@ class Application {
                 new Message("H4"),
                 new Message("H4")
         };
-
+        HashMapMessageRepository hashMapMessageRepository = new HashMapMessageRepository();
         MessageService service = new OrderedDistinctedMessageService(
-                new TimestampMessageDecorator(),
-                new ConsolePrinter()
-        );
-//        service.log(ASC, DISTINCT, messageMain, messages);
-//        service.log(DESC, DISTINCT, messageMain, messages);
-//        service.log(ASC, DOUBLES, messageMain, messages);
-//        service.log(DESC, DOUBLES, messageMain, messages);
-//        service.log(messageMain, messages);
+                new TimestampMessageDecorator(), hashMapMessageRepository);
+        service.log(messageMain, messages);
+        System.out.println(hashMapMessageRepository);
+
+        final UUID key = service.log(messageMain3);
+        System.out.println(service.findByPrimaryKey(key));
+
+        System.out.println("======");
+
+        final Collection<Message> allMessages = service.findAll();
+        for (Message current : allMessages) {
+            System.out.println(current);
+        }
+        System.out.println("======");
+
+        final Collection<Message> findMessage = service.findAllBySeverity(MAJOR);
+        for (Message current : findMessage) {
+            System.out.println(current);
+        }
+//        try {
+//            service.log(ASC, DISTINCT, messageMain, null);
+//        } catch (LogException e) {
+//            e.printStackTrace();
+//        }
 //
-//        System.out.println(messageMain);
-//        System.out.println(messageMain.equals(messageMain2));
-//        System.out.println(messageMain.equals(messageMain3));
-//        System.out.println(messageMain.hashCode());
+//        try {
+//            service.log(null, messages);
+//        } catch (LogException e) {
+//            e.printStackTrace();
+//        }
 //
-//        System.out.println(messageMain5);
-
-        try {
-            service.log(ASC, DISTINCT, messageMain, null);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            service.log(null, messages);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            service.log(messageEmpty);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            service.log(messageEmpty);
+//        } catch (LogException e) {
+//            e.printStackTrace();
+//        }
     }
 }
