@@ -58,17 +58,30 @@ public class HashSetTest {
     @Test
     @DisplayName("Exception if message is Null")
     public void showExceptionIfMessageNull() {
-        service.log(ASC, DISTINCT, message, messages);
-
         assertThatExceptionOfType(NullPointerException.class).isThrownBy(
                 () -> service.log(null));
     }
 
     @Test
-    @DisplayName("Exception if order is Null")
+    @DisplayName("Exception if all messages are Null")
+    public void showExceptionIfAllMessagesNull() {
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(
+                () -> service.log(DESC, DISTINCT, null, null));
+    }
+
+    @Test
+    @DisplayName("Exception if value of order is Null")
     public void showExceptionIfMessageOrderNull() {
         Throwable exceptMessage = assertThrows(LogException.class,
                 () -> service.log(null, DISTINCT, message));
+        assertEquals("notValidArgMessage", exceptMessage.getMessage());
+    }
+
+    @Test
+    @DisplayName("Exception if value of doubling is Null")
+    public void showExceptionIfDoublingNull() {
+        Throwable exceptMessage = assertThrows(LogException.class,
+                () -> service.log(ASC, (Doubling) null, message));
         assertEquals("notValidArgMessage", exceptMessage.getMessage());
     }
 }
