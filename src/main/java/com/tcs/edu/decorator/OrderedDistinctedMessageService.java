@@ -6,7 +6,6 @@ import com.tcs.edu.MessageService;
 import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.printer.ConsolePrinter;
-
 import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
 
 
