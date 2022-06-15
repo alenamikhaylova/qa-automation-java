@@ -1,18 +1,15 @@
 Prerequisites
 =============
-
 ```shell
 sudo yum install -y java-11-openjdk-devel nodejs
 sudo npm install -g generator-jhipster
 ```
 
 ```shell
-cd app.codegen
-docker buildx build --tag tinkoff-edu-app:1.0.0 .
+cd app
 ```
 
 (for Mac only)
-
 ```shell
 export DOCKER_BUILDKIT=0
 export COMPOSE_DOCKER_CLI_BUILD=0
@@ -20,7 +17,6 @@ export COMPOSE_DOCKER_CLI_BUILD=0
 
 Build
 =====
-
 ```shell
 app> 
   mkdir build && \
@@ -36,17 +32,16 @@ app>
 
 Push
 ====
-
 ```shell
 docker push ekr26/tinkoff-edu-app:1.0.0
 ```
+
 
 Run
 ====
 
 Start cluster
 --------------
-
 ```shell
 app>
   docker stack deploy --compose-file docker-compose.yml app
@@ -54,7 +49,6 @@ app>
 
 Cluster info
 ------------
-
 ```shell
 docker stack ls
 docker stack ps app
@@ -64,7 +58,6 @@ docker stack services app
 
 Stop cluster
 ------------
-
 ```shell
 docker stack rm app
 ```
