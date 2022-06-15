@@ -18,21 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * TestCase
  */
 public class HashSetTest {
-    private Message[] messages;
-    private Message message;
-    private MessageService service;
-    private Collection<Message> collectionMessages;
+    private static MessageService service;
 
-    @BeforeEach
-    public void setUp() {
-        Severity severity = REGULAR;
+    @BeforeAll
+    static void setUp() {
         HashMapMessageRepository hashRepository = new HashMapMessageRepository();
-        message = new Message(severity, "Hi");
-        messages = new Message[]{
-                new Message(severity, "Hi")
-        };
+        new Message(REGULAR, "Hi");
         service = new OrderedDistinctedMessageService(new TimestampMessageDecorator(), hashRepository);
-        collectionMessages = service.findAll();
     }
 
     /**
@@ -41,17 +33,23 @@ public class HashSetTest {
     @Test
     @DisplayName("Save ordinary message")
     public void saveOrdinaryMessage() {
+        Message message = new Message("Hi");
+        Message[] messages = {
+                new Message("Hi")
+        };
+        Collection<Message> collectionMessages = service.findAll();
         service.log(message, messages);
-
         assertThat(collectionMessages).contains(message).contains(messages);
-        assertThat(1).isEqualTo(collectionMessages.size());
+        assertThat(2).isEqualTo(collectionMessages.size());
     }
 
     @Test
     @DisplayName("Save decorated message")
     public void saveDecoratedMessage() {
+        Message message = new Message("Hi");
+        Message[] messages = new Message[0];
+        Collection<Message> collectionMessages = service.findAll();
         service.log(DESC, DISTINCT, message, messages);
-
         assertThat(1).isEqualTo(collectionMessages.size());
     }
 
@@ -72,6 +70,7 @@ public class HashSetTest {
     @Test
     @DisplayName("Exception if value of order is Null")
     public void showExceptionIfMessageOrderNull() {
+        Message message = new Message("Hi");
         Throwable exceptMessage = assertThrows(LogException.class,
                 () -> service.log(null, DISTINCT, message));
         assertEquals("notValidArgMessage", exceptMessage.getMessage());
@@ -80,6 +79,7 @@ public class HashSetTest {
     @Test
     @DisplayName("Exception if value of doubling is Null")
     public void showExceptionIfDoublingNull() {
+        Message message = new Message("Hi");
         Throwable exceptMessage = assertThrows(LogException.class,
                 () -> service.log(ASC, (Doubling) null, message));
         assertEquals("notValidArgMessage", exceptMessage.getMessage());
