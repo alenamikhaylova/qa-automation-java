@@ -23,7 +23,6 @@ public class HashSetTest {
     @BeforeAll
     static void setUp() {
         HashMapMessageRepository hashRepository = new HashMapMessageRepository();
-        new Message(REGULAR, "Hi");
         service = new OrderedDistinctedMessageService(new TimestampMessageDecorator(), hashRepository);
     }
 
