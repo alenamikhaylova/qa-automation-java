@@ -3,10 +3,12 @@ package com.tcs.edu.decorator;
 import com.tcs.edu.LogException;
 import com.tcs.edu.MessageDecorator;
 import com.tcs.edu.MessageService;
-import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
-import com.tcs.edu.printer.ConsolePrinter;
-import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
+import com.tcs.edu.repository.HashMapMessageRepository;
+import com.tcs.edu.repository.MessageRepository;
+
+import java.util.Collection;
+import java.util.UUID;
 
 
 /**
@@ -14,12 +16,12 @@ import static com.tcs.edu.decorator.SeverityDecorator.mapToString;
  */
 public class OrderedDistinctedMessageService extends ValidatedService implements MessageService {
 
-    private final Printer printer;
     private final MessageDecorator decorator;
+    private MessageRepository messageRepository = new HashMapMessageRepository();
 
-    public OrderedDistinctedMessageService(MessageDecorator decorator, ConsolePrinter printer) {
+    public OrderedDistinctedMessageService(MessageDecorator decorator, MessageRepository messageRepository) {
         this.decorator = decorator;
-        this.printer = printer;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -31,8 +33,6 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      */
     @Override
     public void log(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException {
-//        if (!super.isArgsValid(messages) && !super.isArgsValid(doubling)) {
-//            return;
         try {
             super.isArgsValid(doubling);
         } catch (IllegalArgumentException e) {
@@ -46,8 +46,6 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
     }
 
     public void log(MessageOrder messageOrder, Message message, Message... messages) throws LogException {
-//        if (!super.isArgsValid(messages) && !super.isArgsValid(messageOrder)) {
-//            return;
         try {
             super.isArgsValid((messageOrder));
         } catch (IllegalArgumentException e) {
@@ -60,28 +58,37 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         }
     }
 
-    public void log(Message message, Message... messages) throws LogException {
-        try {
-            super.isArgsValid(messages);
-        } catch (IllegalArgumentException e) {
-            throw new LogException("notValidArgMessage", e);
-        }
-        for (Message currentMessage : messages) {
-            String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
-            printer.print(decorator.decorate(resultMessage));
-        }
-//        if (super.isArgsValid(messages) && super.isArgsValid(messages.length)) {
-//            for (Message currentMessage : messages) {
-//                if (currentMessage != null) {
-//                    String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
-//                    try {
-//                        printer.print(decorator.decorate(resultMessage));
-//                    } catch (IllegalArgumentException e) {
-//                        throw new LogException("notValidArgMessage", e);
-//                    }
-//                }
-//            }
+    @Override
+    public UUID log(Message message) {
+        return messageRepository.create(message);
+    }
+
+    public UUID log(Message message, Message... messages) throws LogException {
+        return messageRepository.create(message);
+//        try {
+//            super.isArgsValid(messages);
+//        } catch (IllegalArgumentException e) {
+//            throw new LogException("notValidArgMessage", e);
 //        }
+//        for (Message currentMessage : messages) {
+//            String resultMessage = String.format("%s %s %s", message.getBody(), currentMessage.getBody(), mapToString(currentMessage.getLevel()));
+//            //   printer.print(decorator.decorate(resultMessage));
+//        }
+    }
+
+    @Override
+    public Message findByPrimaryKey(UUID key) {
+        return messageRepository.findByPrimaryKey(key);
+    }
+
+    @Override
+    public Collection<Message> findAll() {
+        return messageRepository.findAll();
+    }
+
+    @Override
+    public Collection<Message> findAllBySeverity(Severity by) {
+        return messageRepository.findAllBySeverity(by);
     }
 
     /**
