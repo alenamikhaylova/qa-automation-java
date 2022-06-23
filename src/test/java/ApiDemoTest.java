@@ -1,4 +1,3 @@
-import io.restassured.authentication.PreemptiveBasicAuthScheme;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
@@ -12,21 +11,22 @@ import static org.hamcrest.Matchers.*;
  */
 public class ApiDemoTest {
 
-    private Connection connection;
-    Long id = null;
+    private static Connection connection;
+    static Long id = null;
 
-    @BeforeEach
+    @BeforeAll
     @DisplayName("Set up connection to DB")
-    public void connect() throws SQLException {
+    static void connect() throws SQLException {
         connection = DriverManager.getConnection(
                 "jdbc:postgresql://localhost/app-db",
                 "app-db-admin",
                 "P@ssw0rd"
         );
-        id = newId();
     }
 
-    public Long newId() throws SQLException {
+    @BeforeEach
+    @DisplayName("Create new country before test execution")
+    public void createNewCountry() throws SQLException {
         PreparedStatement insert = connection.prepareStatement(
                 "INSERT INTO country(country_name) VALUES(?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -35,35 +35,21 @@ public class ApiDemoTest {
         insert.executeUpdate();
         ResultSet result = insert.getGeneratedKeys();
         result.next();
-        return result.getLong(1);
-    }
-
-    @BeforeAll
-    @DisplayName("Authentication")
-    public static void setUpAuth() {
-        PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
-        authScheme.setUserName("admin");
-        authScheme.setPassword("admin");
-        authentication = authScheme;
-    }
-
-    @BeforeAll
-    public static void setUpErrorLogging() {
-        enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     @AfterEach
-    @DisplayName("Disconnection from DB")
-    public void disconnect() throws SQLException {
-        if (id != null) deleteData(id);
-        id = null;
-        connection.close();
-    }
-
-    private void deleteData(Long id) throws SQLException {
-        PreparedStatement delete = connection.prepareStatement("DELETE from country where id = ?");
+    @DisplayName("Delete country after text execution")
+    public void deleteCountry() throws SQLException {
+        PreparedStatement delete = connection.prepareStatement(
+                "DELETE from country where id = ?");
         delete.setLong(1, id);
         delete.executeUpdate();
+    }
+
+    @AfterAll
+    @DisplayName("Disconnection from DB")
+    static void disconnect() throws SQLException {
+        connection.close();
     }
 
     @Test
