@@ -1,27 +1,55 @@
-import io.restassured.authentication.PreemptiveBasicAuthScheme;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.sql.*;
 
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 /**
  * Test Cases for check API on localhost
  */
 public class ApiDemoTest {
-    @BeforeAll
-    @DisplayName("Authentication")
-    public static void setUpAuth() {
-        PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
-        authScheme.setUserName("admin");
-        authScheme.setPassword("admin");
-        authentication = authScheme;
-    }
+
+    private static Connection connection;
+    static Long id = null;
 
     @BeforeAll
-    public static void setUpErrorLogging() {
-        enableLoggingOfRequestAndResponseIfValidationFails();
+    @DisplayName("Set up connection to DB")
+    static void connect() throws SQLException {
+        connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost/app-db",
+                "app-db-admin",
+                "P@ssw0rd"
+        );
+    }
+
+    @BeforeEach
+    @DisplayName("Create new country before test execution")
+    public void createNewCountry() throws SQLException {
+        PreparedStatement insert = connection.prepareStatement(
+                "INSERT INTO country(country_name) VALUES(?)",
+                Statement.RETURN_GENERATED_KEYS
+        );
+        insert.setString(1, "99");
+        insert.executeUpdate();
+        ResultSet result = insert.getGeneratedKeys();
+        result.next();
+    }
+
+    @AfterEach
+    @DisplayName("Delete country after text execution")
+    public void deleteCountry() throws SQLException {
+        PreparedStatement delete = connection.prepareStatement(
+                "DELETE from country where id = ?");
+        delete.setLong(1, id);
+        delete.executeUpdate();
+    }
+
+    @AfterAll
+    @DisplayName("Disconnection from DB")
+    static void disconnect() throws SQLException {
+        connection.close();
     }
 
     @Test
@@ -39,12 +67,23 @@ public class ApiDemoTest {
     }
 
     @Test
+    @DisplayName("Get country")
+    public void shouldGetCountry() {
+        when()
+                .get("/api/countries")
+                .then()
+                .statusCode(200)
+                .body("", hasItem(hasEntry("countryName", "99"))
+                );
+    }
+
+    @Test
     @DisplayName("Create new country if it doesn't exist")
     public void shouldCreateCountryWhenUnique() {
         given()
                 .contentType("application/json")
                 .body("{\n" +
-                        " \"countryName\": \"MI\"\n" +
+                        " \"countryName\": \"99\"\n" +
                         "}")
                 .when()
                 .post("/api/countries")
@@ -55,33 +94,35 @@ public class ApiDemoTest {
 
     @Test
     @DisplayName("Update name of country")
-    public void shouldUpdateCountry() {
+    public void shouldUpdateCountry() throws SQLException {
+        String countryName = "PP";
         given()
                 .contentType("application/json")
-                .body("{\n" +
-                        " \"id\": \"3\",\n" +
-                        " \"countryName\": \"FE\"\n" +
-                        "}")
+                .body(String.format("{\n" +
+                        " \"id\": %d,\n" +
+                        " \"countryName\": \"%s\"\n" +
+                        "}", id, countryName))
                 .when()
-                .put("/api/countries/3")
+                .put(String.format("/api/countries/%d", id))
                 .then()
-                .statusCode(200)
-                .body("id", is(3),
-                        "countryName", is("FE")
-                );
+                .statusCode(200);
+        assertThat(selectId(id), equalTo(countryName));
+    }
+
+    private String selectId(Long id) throws SQLException {
+        PreparedStatement select = connection.prepareStatement("SELECT * from country where id = ?");
+        select.setLong(1, id);
+        ResultSet result = select.executeQuery();
+        if (result.next()) return result.getString(2);
+        else return null;
     }
 
     @Test
     @DisplayName("Delete country")
     public void shouldDeleteCountry() {
         given()
-                .contentType("application/json")
-                .body("{\n" +
-                        " \"id\": \"3\",\n" +
-                        " \"countryName\": \"FE\"\n" +
-                        "}")
                 .when()
-                .delete("api/countries/3")
+                .delete("api/countries/" + id)
                 .then()
                 .statusCode(204)
                 .body(isEmptyOrNullString());
